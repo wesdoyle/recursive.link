@@ -1,29 +1,9 @@
-# recursive_link
+# recursive.link
 
-## Project setup
-```
-yarn install
-```
+chaos game / fractal experiments in vue + d3
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+https://en.wikipedia.org/wiki/Chaos_game
 
-### Compiles and minifies for production
-```
-yarn build
-```
+https://mathworld.wolfram.com/SierpinskiSieve.html
 
-### Run your unit tests
-```
-yarn test:unit
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![image](https://user-images.githubusercontent.com/12467545/113969061-e6d06500-97f9-11eb-9cca-21c472c8300e.png)
