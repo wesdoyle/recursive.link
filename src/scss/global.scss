@@ -1,0 +1,93 @@
+@import 'reset.scss';
+
+/*============================================================
+ == Global Elements
+/============================================================*/
+
+html {
+  font-size: 12px;
+}
+
+html,
+body {
+  margin: 0;
+  min-width: 450px;
+  padding: 0;
+}
+
+body {
+  background-color: #fff;
+  color: #333;
+  font-family: 'Inconsolata', monospace;
+  font-size: 1.6rem;
+  font-weight: 400;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  &.modal-open {
+    overflow: hidden;
+  }
+}
+
+/*============================================================
+ == Text Elements / Classes
+/============================================================*/
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 300;
+  margin-bottom: 1rem;
+  margin-top: 0;
+
+  &.no-mb {
+    margin-bottom: 0;
+  }
+}
+
+h1 {
+  font-size: 2.4rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+}
+
+h4 {
+  font-size: 1.6rem;
+}
+
+p {
+  font-size: 1.6rem;
+  line-height: 1.2em;
+  margin: 0 0 1rem;
+  &.no-mb {
+    margin-bottom: 0;
+  }
+}
+
+ul {
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 2rem;
+}
+
+a {
+  &:visited,
+  &:active,
+  &:focus,
+  &:hover {
+    color: inherit;
+  }
+}
+
+b,
+strong {
+  font-weight: bold;
+}
