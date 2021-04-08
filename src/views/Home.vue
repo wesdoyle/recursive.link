@@ -26,9 +26,17 @@
             <span v-else>not set</span>
           </div>
           <div>
-            <span class="seed">Last Point: </span>
+            <span class="dice">Seed Point: </span>
             <span v-if="seedPointSet">[{{ seed.x }}, {{ seed.y }}]</span>
             <span v-else>not set</span>
+          </div>
+          <div>
+            <span class="last-point">Last Point: </span>
+            <span v-if="seedPointSet">[{{ lastPointPlaced.x }}, {{ lastPointPlaced.y }}]</span>
+            <span v-else>not set</span>
+          </div>
+          <div>
+            <span class="dice">Dice Roll: {{ diceRoll }}</span>
           </div>
         </div>
         <div class="control-actions">
@@ -68,6 +76,7 @@ export default class Home extends Vue {
   seedPointSet = false;
 
   lastPointPlaced = { x: 0, y: 0, color: this.pointColor };
+  diceRoll: number = NaN;
 
   svg: any;
 
@@ -159,7 +168,7 @@ export default class Home extends Vue {
       .append("circle")
       .attr("cx", nextVector.x)
       .attr("cy", nextVector.y)
-      .attr("r", 1)
+      .attr("r", 0.8)
       .attr("class", "placed-point")
       .attr("fill", this.lastPointPlaced.color);
 
@@ -173,7 +182,9 @@ export default class Home extends Vue {
   }
 
   rollDice() {
-    return Math.floor(Math.random() * 6) + 1;
+    let roll = Math.floor(Math.random() * 6) + 1;
+    this.diceRoll = roll;
+    return roll;
   }
 
   reset() {
@@ -279,6 +290,16 @@ export default class Home extends Vue {
 }
 .seed {
   color: #e4c1f9;
+  font-weight: bold;
+}
+
+.dice {
+  color: #333;
+  font-weight: bold;
+}
+
+.last-point {
+  color: #333;
   font-weight: bold;
 }
 </style>
