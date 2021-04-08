@@ -51,6 +51,7 @@ import * as d3 from "d3";
 export default class Home extends Vue {
   isMounted = false;
 
+  factor = 2;
   background = "#222";
   pointColor = "#e4c1f9";
 
@@ -153,7 +154,7 @@ export default class Home extends Vue {
       .append("circle")
       .attr("cx", nextVector.x)
       .attr("cy", nextVector.y)
-      .attr("r", 2)
+      .attr("r", 1)
       .attr("class", "placed-point")
       .attr("fill", this.lastPointPlaced.color);
 
@@ -161,13 +162,8 @@ export default class Home extends Vue {
   }
 
   getNextVector(origin, target) {
-    console.log("starting at", origin.x, origin.y)
-    let x;
-    let y;
-    x = Math.abs((target.x + origin.x)) / 2;
-    y = Math.abs((target.y + origin.y)) / 2;
-    console.log("attracted to target", target.x, target.y)
-    console.log("moving to", x, y)
+    let x = Math.abs((target.x + origin.x)) / this.factor;
+    let y = Math.abs((target.y + origin.y)) / this.factor;
     return {x, y, color: this.pointColor };
   }
 
