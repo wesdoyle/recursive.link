@@ -1,4 +1,4 @@
-# recursive_link
+# recursive.link
 
 chaos game / fractal experiments in vue + d3
 
