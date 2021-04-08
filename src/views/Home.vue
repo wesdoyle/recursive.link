@@ -69,6 +69,8 @@ export default class Home extends Vue {
 
   lastPointPlaced = { x: 0, y: 0, color: this.pointColor };
 
+  svg: any;
+
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   handlePointPlacement(svg: any, event: Event) {
     let mouse = d3.pointer(event, this.$refs.simulation);
@@ -175,7 +177,19 @@ export default class Home extends Vue {
   }
 
   reset() {
-    console.log("TODO");
+    d3.select('#simulation').html("");
+    this.generateSvg();
+    this.points = {
+      p1: { x: 0, y: 0, color: "#a9def9" },
+      p2: { x: 0, y: 0, color: "#d0f4de" },
+      p3: { x: 0, y: 0, color: "#ff99c8" },
+      seed: { x: 0, y: 0, color: this.pointColor },
+    };
+    this.point1Set = false;
+    this.point2Set = false;
+    this.point3Set = false;
+    this.seedPointSet = false;
+    this.lastPointPlaced = { x: 0, y: 0, color: this.pointColor };
   }
 
   generateSvg(): void {
@@ -202,6 +216,7 @@ export default class Home extends Vue {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     this.$refs.svg = svg;
+    this.svg = svg;
   }
 
   mounted(): void {
