@@ -12,36 +12,31 @@
         <div class="control-stats">
           <div>
             <span class="p1">Point 1: </span>
-            <span v-if="point1Set"
-              >[{{ p1.x }}, {{ p1.y }}] - (1,2)</span
-            >
+            <span v-if="point1Set">[{{ p1.x }}, {{ p1.y }}] - (1,2)</span>
             <span v-else>not set</span>
           </div>
           <div>
             <span class="p2">Point 2: </span>
-            <span v-if="point2Set"
-              >[{{ p2.x }}, {{ p2.y }}] - (3,4)</span
-            >
+            <span v-if="point2Set">[{{ p2.x }}, {{ p2.y }}] - (3,4)</span>
             <span v-else>not set</span>
           </div>
           <div>
             <span class="p3">Point 3: </span>
-            <span v-if="point3Set"
-              >[{{ p3.x }}, {{ p3.y }}] - (5,6)</span
-            >
+            <span v-if="point3Set">[{{ p3.x }}, {{ p3.y }}] - (5,6)</span>
+            <span v-else>not set</span>
+          </div>
+          <div>
+            <span class="seed">Last Point: </span>
+            <span v-if="seedPointSet">[{{ seed.x }}, {{ seed.y }}]</span>
             <span v-else>not set</span>
           </div>
         </div>
         <div class="control-actions">
-          <button :disabled="!allInitialPointsPlaced">
+          <button :disabled="!allInitialPointsPlaced" @click="placePoint">
             Place Point
           </button>
-          <button :disabled="!allInitialPointsPlaced">
-            Automate
-          </button>
-          <button @click="reset">
-            Reset
-          </button>
+          <button :disabled="!allInitialPointsPlaced" @click="automate">Automate</button>
+          <button @click="reset">Reset</button>
         </div>
       </div>
     </div>
@@ -57,22 +52,24 @@ export default class Home extends Vue {
   isMounted = false;
 
   background = "#222";
+  pointColor = "#e4c1f9";
 
   points = {
-    p1: {x: 0, y: 0, color: "#a9def9"},
-    p2: {x: 0, y: 0, color: "#d0f4de"},
-    p3: {x: 0, y: 0, color: "#ff99c8"},
+    p1: { x: 0, y: 0, color: "#a9def9" },
+    p2: { x: 0, y: 0, color: "#d0f4de" },
+    p3: { x: 0, y: 0, color: "#ff99c8" },
+    seed: { x: 0, y: 0, color: this.pointColor },
   };
 
   point1Set = false;
   point2Set = false;
   point3Set = false;
+  seedPointSet = false;
 
-  handlePointPlacement(svg, event: Event) {
+  lastPointPlaced = { x: 0, y: 0, color: this.pointColor };
+
+  handlePointPlacement(svg: any, event: Event) {
     let mouse = d3.pointer(event, this.$refs.simulation);
-
-    console.log(mouse);
-
     let pointPosition = [mouse[0], mouse[1]];
     let color = "";
 
@@ -91,11 +88,16 @@ export default class Home extends Vue {
       this.points.p3.y = pointPosition[1];
       color = this.points.p3.color;
       this.point3Set = true;
+    } else if (!this.seedPointSet) {
+      this.points.seed.x = pointPosition[0];
+      this.points.seed.y = pointPosition[1];
+      color = this.points.seed.color;
+      this.seedPointSet = true;
+      this.lastPointPlaced.x = pointPosition[0];
+      this.lastPointPlaced.y = pointPosition[1];
     } else {
       return;
     }
-
-    console.log(this.points);
 
     svg
       .append("circle")
@@ -109,21 +111,72 @@ export default class Home extends Vue {
   get p1() {
     return this.points.p1;
   }
-
   get p2() {
     return this.points.p2;
   }
-
   get p3() {
     return this.points.p3;
   }
-
+  get seed() {
+    return this.points.seed;
+  }
   get allInitialPointsPlaced() {
-    return this.point1Set && this.point2Set && this.point3Set;
+    return (
+      this.point1Set && this.point2Set && this.point3Set && this.seedPointSet
+    );
+  }
+
+  automate() {
+    let i = 0;;
+    while (i < 1000) {
+      setTimeout(this.placePoint, 300);
+      i++;
+    }
+  }
+
+  placePoint() {
+    let number = this.rollDice();
+    let attractorTarget;
+    if (number === 1 || number === 2) {
+      attractorTarget = this.points.p1;
+    }
+    if (number === 3 || number === 4) {
+      attractorTarget = this.points.p2;
+    }
+    if (number === 5 || number === 6) {
+      attractorTarget = this.points.p3;
+    }
+
+    let nextVector = this.getNextVector(this.lastPointPlaced, attractorTarget);
+
+    this.$refs.svg
+      .append("circle")
+      .attr("cx", nextVector.x)
+      .attr("cy", nextVector.y)
+      .attr("r", 2)
+      .attr("class", "placed-point")
+      .attr("fill", this.lastPointPlaced.color);
+
+    this.lastPointPlaced = nextVector;
+  }
+
+  getNextVector(origin, target) {
+    console.log("starting at", origin.x, origin.y)
+    let x;
+    let y;
+    x = Math.abs((target.x + origin.x)) / 2;
+    y = Math.abs((target.y + origin.y)) / 2;
+    console.log("attracted to target", target.x, target.y)
+    console.log("moving to", x, y)
+    return {x, y, color: this.pointColor };
+  }
+
+  rollDice() {
+    return Math.floor(Math.random() * 6) + 1;
   }
 
   reset() {
-    console.log("TODO")
+    console.log("TODO");
   }
 
   generateSvg(): void {
@@ -146,6 +199,8 @@ export default class Home extends Vue {
       .attr("stroke-alignment", "outer");
 
     svg.on("click", (event) => this.handlePointPlacement(svg, event));
+
+    this.$refs.svg = svg;
   }
 
   mounted(): void {
@@ -204,6 +259,10 @@ export default class Home extends Vue {
 }
 .p3 {
   color: #ff99c8;
+  font-weight: bold;
+}
+.seed {
+  color: #e4c1f9;
   font-weight: bold;
 }
 </style>
