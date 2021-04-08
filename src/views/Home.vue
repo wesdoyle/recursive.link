@@ -69,6 +69,7 @@ export default class Home extends Vue {
 
   lastPointPlaced = { x: 0, y: 0, color: this.pointColor };
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   handlePointPlacement(svg: any, event: Event) {
     let mouse = d3.pointer(event, this.$refs.simulation);
     let pointPosition = [mouse[0], mouse[1]];
@@ -151,6 +152,8 @@ export default class Home extends Vue {
     let nextVector = this.getNextVector(this.lastPointPlaced, attractorTarget);
 
     this.$refs.svg
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       .append("circle")
       .attr("cx", nextVector.x)
       .attr("cy", nextVector.y)
@@ -161,7 +164,7 @@ export default class Home extends Vue {
     this.lastPointPlaced = nextVector;
   }
 
-  getNextVector(origin, target) {
+  getNextVector(origin: any, target: any) {
     let x = Math.abs((target.x + origin.x)) / this.factor;
     let y = Math.abs((target.y + origin.y)) / this.factor;
     return {x, y, color: this.pointColor };
@@ -196,6 +199,8 @@ export default class Home extends Vue {
 
     svg.on("click", (event) => this.handlePointPlacement(svg, event));
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     this.$refs.svg = svg;
   }
 
